@@ -12,9 +12,10 @@ let config = {
             }
         },
     },
-    backgroundColor: '#000000',
-    scene: [Title, Play]
-}
+  },
+  backgroundColor: "#000000",
+  scene: [Title, Play],
+};
 
 let game = new Phaser.Game(config);
 
