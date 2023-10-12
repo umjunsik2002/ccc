@@ -1,12 +1,4 @@
 
-class start extends Phaser.Scene {
-    constructor() {
-        super('start');
-    }
-    preload(){}
-    create(){}
-    update(){}
-}
 
 let config = {
     type: Phaser.WEBGL,
@@ -17,7 +9,7 @@ let config = {
         height: 1080
     },
     backgroundColor: '#000000',
-    scene: [start]
+    scene: [Play]
 }
 
 let game = new Phaser.Game(config);
