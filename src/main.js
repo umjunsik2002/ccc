@@ -13,7 +13,10 @@ let config = {
         },
     },
     backgroundColor: '#000000',
-    scene: [Play]
+    scene: [Title, Play]
 }
 
 let game = new Phaser.Game(config);
+
+//variable defentions
+let keyENTER = null;
