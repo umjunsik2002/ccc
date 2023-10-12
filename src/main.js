@@ -12,7 +12,7 @@ let config = {
             }
         },
     },
-    backgroundColor: '#000000',
+    backgroundColor: '#555555',
     scene: [Play]
 }
 
