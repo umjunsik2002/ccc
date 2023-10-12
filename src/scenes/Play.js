@@ -3,6 +3,11 @@ class Play extends Phaser.Scene{
         super('playScene');
     }
     preload(){}
-    create(){}
-    update(){}
+    create(){
+
+        this.cameras.main.setBackgroundColor('0xFFFFFF');
+    }
+    update(){
+        console.log("test")
+    }
 }
