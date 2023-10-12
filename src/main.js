@@ -11,7 +11,6 @@ let config = {
                 //debug: true
             }
         },
-    },
   },
   backgroundColor: "#000000",
   scene: [Title, Play],
