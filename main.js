@@ -1,7 +1,13 @@
-title = "Cat Catch Ca$h";
+titleWords = ["Cat", "Catch", "Ca$h"];
+word1 = titleWords[rndi(titleWords.length)]
+word2 = titleWords[rndi(titleWords.length)]
+word3 = titleWords[rndi(titleWords.length)]
+
+title = (`${word1} ${word2} ${word3}`);
 
 description = `
-lol
+[Tap/Hold]
+  Steal!
 `;
 
 // Define pixel arts of characters
@@ -16,12 +22,12 @@ lol
 
 characters = [
 `
-  ll
-  ll
-ccllcc
-ccllcc
-ccllcc
-cc  cc
+ y  y
+ yyyy
+yygygy
+ yyyy
+ yyyy
+ y  y
 `,
 
 `
@@ -43,8 +49,8 @@ yyyyyy
 ];
 
 const G = {
-        WIDTH: 100,
-        HEIGHT: 150,
+        WIDTH: 200,
+        HEIGHT: 50,
 
         STAR_SPEED_MIN: 0.5,
         STAR_SPEED_MAX: 1.0,
