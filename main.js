@@ -31,21 +31,22 @@ yygygy
 `,
 
 `
-rr  rr
-rrrrrr
-rrpprr
-rrrrrr
-  rr
-  rr
+ y  y
+ yyyy
+yygygy
+ yyyy
+ yyyy
+ y  
 `,
 
 `
-y  y
-yyyyyy
  y  y
-yyyyyy
- y  y
-`
+ yyyy
+yygygy
+ yyyy
+ yyyy
+    y
+`,
 ];
 
 const G = {
@@ -68,6 +69,7 @@ options = {
 /**
  * @typedef {{
  * pos: Vector
+ * moveSpeed: number
  * }} Player
  */
 
@@ -81,15 +83,15 @@ function update() {
     // init ran at startup
     if (!ticks) {
         player = {
-            pos: vec(G.WIDTH * 0.5, G.HEIGHT * 0.5),
-            firingCooldown: G.PLAYER_FIRE_RATE,
-            isFiringLeft: true
+            pos: vec(3, G.HEIGHT - 3),
+            moveSpeed: 0.25
         };
     }
 
     // Updating and drawing the player
-    player.pos = vec(input.pos.x, input.pos.y);
-    player.pos.clamp(0, G.WIDTH, 0, G.HEIGHT);
+    if (player.pos.x < G.WIDTH - 3) {
+        player.pos.x += player.moveSpeed;
+    }
 
     // // Particles
     // color("yellow")
