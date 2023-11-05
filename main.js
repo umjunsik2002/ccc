@@ -69,6 +69,7 @@ options = {
 /**
  * @typedef {{
  * pos: Vector
+ * mirror: number
  * moveSpeed: number
  * }} Player
  */
@@ -83,13 +84,18 @@ function update() {
     // init ran at startup
     if (!ticks) {
         player = {
-            pos: vec(3, G.HEIGHT - 3),
+            pos: vec(4, G.HEIGHT - 3),
+            mirror: 1,
             moveSpeed: 0.25
         };
     }
 
     // Updating and drawing the player
-    if (player.pos.x < G.WIDTH - 3) {
+    if (player.pos.x < G.WIDTH - 2 && player.pos.x > 3) {
+        player.pos.x += player.moveSpeed;
+    } else {
+        player.mirror *= -1
+        player.moveSpeed *= -1
         player.pos.x += player.moveSpeed;
     }
 
@@ -107,7 +113,7 @@ function update() {
 
     // Draw sprite with original colors instead of an overlay
     color("black")
-    char("a", player.pos)
+    char("a", player.pos, {mirror: {x: player.mirror}})
 
     // Text
     color("red");
