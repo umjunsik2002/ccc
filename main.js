@@ -70,6 +70,7 @@ options = {
  * @typedef {{
  * pos: Vector
  * mirror: number
+ * flipFactor : number
  * moveSpeed: number
  * }} Player
  */
@@ -86,17 +87,20 @@ function update() {
         player = {
             pos: vec(4, G.HEIGHT - 3),
             mirror: 1,
-            moveSpeed: 0.25
+            flipFactor: 1,
+            moveSpeed: 20
         };
     }
 
+    player.moveSpeed = difficulty / 4
+
     // Updating and drawing the player
     if (player.pos.x < G.WIDTH - 2 && player.pos.x > 3) {
-        player.pos.x += player.moveSpeed;
+        player.pos.x += player.moveSpeed * player.flipFactor;
     } else {
         player.mirror *= -1
-        player.moveSpeed *= -1
-        player.pos.x += player.moveSpeed;
+        player.flipFactor *= -1
+        player.pos.x += player.moveSpeed * player.flipFactor;
     }
 
     // // Particles
