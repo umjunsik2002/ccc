@@ -92,6 +92,11 @@ function update() {
         };
     }
 
+    for (let i = 0; i < 10; i++) {
+        color("light_black")
+        box(30 + (i * 16), G.HEIGHT - 2, 10, 30)
+    }
+
     player.moveSpeed = difficulty / 4
 
     // Updating and drawing the player
