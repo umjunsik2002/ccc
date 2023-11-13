@@ -23,8 +23,7 @@ word3 = titleWords[rndi(titleWords.length)]
 title = (`${word1} ${word2} ${word3}`);
 
 description = `
-[Tap/Hold]
-  Steal!
+[Tap] Steal!
 `;
 
 // Define pixel arts of characters
@@ -150,6 +149,20 @@ function update() {
             color("green")
             box(m.pos.x, m.pos.y, rnd(10, 15), rnd(30,35))
 
+            color("black");
+            const colliding = char("a", player.pos.x, player.pos.y).isColliding.rect.green;
+
+            if (input.isJustPressed && colliding) {
+                addScore(round(10 * difficulty), player.pos.x + rnd(-10, 10), player.pos.y - 10)
+                m.isLucky = false;
+                activeMachine = false;
+                play("coin");
+            }
+            if (input.isJustPressed && !colliding) {
+                play("explosion");
+                end();
+            }
+
             color("yellow")
             particle(
                 // May also use a Vector instead of an (x, y) coordinate
@@ -166,7 +179,7 @@ function update() {
         }
     });
 
-    player.moveSpeed = difficulty / 4
+    player.moveSpeed = difficulty
 
     // Updating and drawing the player
     if (player.pos.x < G.WIDTH - 2 && player.pos.x > 3) {
@@ -175,6 +188,7 @@ function update() {
         player.mirror *= -1
         player.flipFactor *= -1
         player.pos.x += player.moveSpeed * player.flipFactor;
+        play("tone");
     }
 
     // // Particles
@@ -194,8 +208,8 @@ function update() {
     char("a", player.pos, {mirror: {x: player.mirror}})
 
     // Text
-    color("red");
-    text(difficulty.toString(), G.WIDTH - 25, 10);
+    //color("red");
+    //text(difficulty.toString(), G.WIDTH - 25, 10);
 };
 
 
