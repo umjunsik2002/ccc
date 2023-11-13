@@ -63,11 +63,180 @@ yygygy
  yyyy
     y
 `,
+`
+lrllly
+lllgll
+lglllg
+lllbll
+lylllr
+lllyll
+`,
+`
+lllrll
+lrllly
+lllgll
+lglllg
+lllbll
+lylllr
+`,
+`
+lblllb
+lllrll
+lrllly
+lllgll
+lglllg
+lllbll
+`,
+`
+lllyll
+lblllb
+lllrll
+lrllly
+lllgll
+lglllg
+`,
+`
+lylllr
+lllyll
+lblllb
+lllrll
+lrllly
+lllgll
+`,
+`
+lllbll
+lylllr
+lllyll
+lblllb
+lllyll
+lrllly
+`,
+`
+lglllg
+lllbll
+lylllr
+lllyll
+lblllb
+lllrll
+`,
+`
+lllgll
+lglllg
+lllbll
+lylllr
+lllyll
+lblllb
+`,
+`
+llllll
+llllll
+lrlrlr
+llllll
+llllll
+llllll
+`,
+`
+llllll
+llllll
+rlrlrl
+llllll
+llllll
+llllll
+`,
+`
+llllll
+llllll
+lglglg
+llllll
+llllll
+llllll
+`,
+`
+llllll
+llllll
+glglgl
+llllll
+llllll
+llllll
+`,
+`
+llllll
+llllll
+lblblb
+llllll
+llllll
+llllll
+`,
+`
+llllll
+llllll
+blblbl
+llllll
+llllll
+llllll
+`,
+`
+llllll
+llllll
+lylyly
+llllll
+llllll
+llllll
+`,
+`
+llllll
+llllll
+ylylyl
+llllll
+llllll
+llllll
+`,
+`
+   BB 
+   BB 
+   B
+   B
+  BB
+  BB
+`,
+`
+
+   BB 
+   BB 
+   B
+  BB
+  BB
+`,
+`
+
+
+   BB 
+   BB 
+  BB
+  BB
+`,
+`
+
+   BB 
+   BB 
+   B
+  BB
+  BB
+`,
+`
+   BB 
+   BB 
+   B
+   B
+  BB
+  BB
+`,
 ];
 
 const G = {
         WIDTH: 200,
         HEIGHT: 50,
+        TICKS_PER_FRAME: 6,
 };
 
 options = {
@@ -79,7 +248,7 @@ options = {
 
         isCapturing: true,
         isCapturingGameCanvasOnly: true,
-        captureCanvasScale: 2
+        captureCanvasScale: 2,
 };
 
 /**
@@ -111,6 +280,15 @@ let machine;
 
 let machines;
 
+let screen_frame = 0;
+
+let cycle = 0;
+
+let lever_cycle = 0;
+
+let pull_frame = 0;
+
+let win_frame = 0;
 /**
  * @type { boolean }
  */
@@ -120,41 +298,72 @@ let activeMachine
 function update() {
     // init ran at startup
     if (!ticks) {
+        screen_frame = 0;
         player = {
             pos: vec(4, G.HEIGHT - 3),
             mirror: 1,
             flipFactor: 1,
             moveSpeed: 20
         };
+        screen_map = ["d", "e", "f", "g", "h","i","j","k"];
+        win_screens = ["l", "m", "n", "o", "p", "q", "r", "s"];
+        pull_lever_frames = ["t","u","v","w","x"];
 
         machines = []
         for (let i = 0; i < 10; i++) {
             machines.push(machine = {
                 pos: vec(30 + (i * 16), G.HEIGHT - 2, 10, 30),
                 id: i + 1,
-                isLucky: false
+                isLucky: false,
+                pull_lever: false
             })
         }
 
         activeMachine = false
     }
 
+    if(ticks % G.TICKS_PER_FRAME == 0){
+        screen_frame++;
+        if(screen_frame > 6){
+            screen_frame = 0;
+        }
+        cycle++;
+        if(cycle > 1){
+            cycle = 0;
+        }
+
+        lever_cycle++;
+        if(lever_cycle >= 5){
+            lever_cycle = 0;
+        }
+
+
+    }
+
     if (ticks % 5 == 0 && !activeMachine) {
         machines[rndi(machines.length)].isLucky = true
         activeMachine = true
+        win_frame = rndi(3) * 2;
     }
 
     machines.forEach((m) => {
+            color("light_red")
+            box(m.pos.x, m.pos.y, 8, 30)
+            box(m.pos.x, m.pos.y-10, 10, 10)
+            color("light_black")
+            box(m.pos.x , m.pos.y-10, 8, 8)
         if (m.isLucky) {
+            color("black")
+            char(win_screens[win_frame + cycle], vec(m.pos.x, m.pos.y- 10))
             color("green")
-            box(m.pos.x, m.pos.y, rnd(10, 15), rnd(30,35))
-
-            color("black");
+            box(m.pos.x, m.pos.y-1, 8, 2)
+            color("yellow")
             const colliding = char("a", player.pos.x, player.pos.y).isColliding.rect.green;
 
             if (input.isJustPressed && colliding) {
                 addScore(round(10 * difficulty), player.pos.x + rnd(-10, 10), player.pos.y - 10)
                 m.isLucky = false;
+                m.pull_lever = true;
                 activeMachine = false;
                 play("coin");
             }
@@ -162,7 +371,6 @@ function update() {
                 play("explosion");
                 end();
             }
-
             color("yellow")
             particle(
                 // May also use a Vector instead of an (x, y) coordinate
@@ -174,8 +382,22 @@ function update() {
                 PI/2                      // emitting width
             )
         } else {
-            color("light_black")
-            box(m.pos.x, m.pos.y, 10, 30)
+            color("black")
+            char(screen_map[(screen_frame+m.id) % 7], vec(m.pos.x, m.pos.y- 10))
+        }
+        if(m.pull_lever){
+            color("yellow")
+            char(pull_lever_frames[lever_cycle % 5], vec(m.pos.x+5 , m.pos.y-3))
+            if(lever_cycle > 3){
+                m.pull_lever = false;
+            }
+        }else if(m.isLucky){
+            color("green");
+            char("t", vec(m.pos.x+5 , m.pos.y-3))
+        }
+        else {
+            color("black")
+            char("t", vec(m.pos.x+5 , m.pos.y-3))
         }
     });
 
