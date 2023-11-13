@@ -80,6 +80,26 @@ options = {
  */
 let player;
 
+/**
+ * @typedef {{
+* pos: Vector
+* id: number
+* isLucky: boolean
+* }} Machine
+*/
+
+/**
+* @type { Machine }
+*/
+let machine;
+
+let machines;
+
+/**
+ * @type { boolean }
+ */
+let activeMachine
+
 // The game loop
 function update() {
     // init ran at startup
@@ -90,12 +110,44 @@ function update() {
             flipFactor: 1,
             moveSpeed: 20
         };
+
+        machines = []
+        for (let i = 0; i < 10; i++) {
+            machines.push(machine = {
+                pos: vec(30 + (i * 16), G.HEIGHT - 2, 10, 30),
+                id: i + 1,
+                isLucky: false
+            })
+        }
+
+        activeMachine = false
     }
 
-    for (let i = 0; i < 10; i++) {
-        color("light_black")
-        box(30 + (i * 16), G.HEIGHT - 2, 10, 30)
+    if (ticks % 5 == 0 && !activeMachine) {
+        machines[rndi(machines.length)].isLucky = true
+        activeMachine = true
     }
+
+    machines.forEach((m) => {
+        if (m.isLucky) {
+            color("green")
+            box(m.pos.x, m.pos.y, rnd(10, 15), rnd(30,35))
+
+            color("yellow")
+            particle(
+                // May also use a Vector instead of an (x, y) coordinate
+                m.pos.x,             // x coordinate
+                m.pos.y - 15,             // y coordinate
+                2,                       // number of particles
+                2,                       // speed of particles
+                -PI/2,                   // emitting angle
+                PI/2                      // emitting width
+            )
+        } else {
+            color("light_black")
+            box(m.pos.x, m.pos.y, 10, 30)
+        }
+    });
 
     player.moveSpeed = difficulty / 4
 
