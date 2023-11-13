@@ -358,7 +358,7 @@ function update() {
             color("green")
             box(m.pos.x, m.pos.y-1, 8, 2)
             color("yellow")
-            const colliding = char("a", player.pos.x, player.pos.y).isColliding.rect.green;
+            const colliding = char("a", player.pos.x + (1 * player.flipFactor), player.pos.y).isColliding.rect.green;
 
             if (input.isJustPressed && colliding) {
                 addScore(round(10 * difficulty), player.pos.x + rnd(-10, 10), player.pos.y - 10)
